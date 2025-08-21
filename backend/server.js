@@ -1,7 +1,6 @@
-// server.js
 require('dotenv').config();
 const express = require('express');
-const { sequelize, testConnection } = require('./db');
+const { sequelize, testConnection } = require('./src/db');
 
 const app = express();
 app.use(express.json());
@@ -15,7 +14,7 @@ app.get('/health', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 (async () => {
   await testConnection();
