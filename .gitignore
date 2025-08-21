@@ -1,0 +1,19 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Env
+.env
+frontend/.env
+backend/.env
+
+# sqlite
+backend/data/*.sqlite
+
+# Vite / build
+dist/
+frontend/dist/
+
+# Editor
+.vscode/
