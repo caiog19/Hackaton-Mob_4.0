@@ -1,0 +1,145 @@
+.home-container {
+  width: 100%;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: #023e58; 
+  overflow: hidden;
+}
+
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #2485DB; 
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  max-height: 70px;
+}
+
+.menu-btn, .logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: white;
+  font-weight: 600;
+}
+
+.menu-btn svg {
+  width: 28px;
+  height: 28px;
+}
+
+.header-logo {
+  width: 80px; 
+}
+
+.search-bar-container {
+  position: absolute;
+  top: 80px; 
+  left: 16px;
+  right: 16px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  margin: 0 12px;
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  width: 100%;
+  height: 48px;
+  font-size: 16px;
+  background: transparent;
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+}
+
+.bottom-bar {
+  position: absolute;
+  bottom: 24px;
+  left: 16px;
+  right: 16px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ixplanar-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: white;
+  font-weight: bold;
+}
+
+.speaker-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background-color: #2485DB;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.speaker-btn svg {
+  width: 24px;
+  height: 24px;
+  stroke: white; 
+}
+
+.route-info {
+  background-color: white;
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-grow: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.time-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.time-info svg {
+  width: 20px;
+  height: 20px;
+}
+
+.alternative-route-btn {
+  border: none;
+  background: none;
+  color: #2485DB;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+}
