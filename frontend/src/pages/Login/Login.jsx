@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../services/api";
-import "./Login.css";
+import "../AuthCss/Auth.css";
 
 import busBg from "../../assets/bus_bg.png";
 import logo from "../../assets/logo_ixplana.png";
