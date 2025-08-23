@@ -1,33 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
+import { useLoadScript } from '@react-google-maps/api';
+import Map from '../../components/Map'; 
 import './Home.css'; 
 
 import logo from '../../assets/logo_ixplana.png'; 
-
 
 const libraries = ['places']; 
 
 export default function Home() {
   const nav = useNavigate();
-  const [center, setCenter] = useState({ lat: -22.9068, lng: -43.1729 }); 
-
+  
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY, 
     libraries,
   });
-
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setCenter({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-      },
-      () => console.log('Usuário não permitiu acesso à localização.')
-    );
-  }, []);
 
   function logout() {
     localStorage.removeItem('token');
@@ -35,8 +22,6 @@ export default function Home() {
     nav('/login');
   }
 
-  if (loadError) return "Erro ao carregar o mapa";
-  if (!isLoaded) return "Carregando Mapa...";
 
   return (
     <div className="home-container">
@@ -48,21 +33,7 @@ export default function Home() {
         <button onClick={logout} className="logout-btn">Sair</button> 
       </header>
       
-      <div className="search-bar-container">
-        <svg className="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm10 2-4.35-4.35" stroke="#6B7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path></svg>
-        <input type="text" placeholder="Digite um destino" className="search-input" />
-      </div>
-
-      <GoogleMap
-        mapContainerClassName="map-container"
-        center={center}
-        zoom={15}
-        options={{
-          disableDefaultUI: true, 
-        }}
-      >
-        <MarkerF position={center} /> 
-      </GoogleMap>
+      <Map />
       
       <div className="bottom-bar">
         <div className="ixplanar-info">
