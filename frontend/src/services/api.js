@@ -1,6 +1,11 @@
 import axios from 'axios';
 
-const base = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+const fallbackProd = 'https://hackaton-mob-4-0-back.onrender.com';
+const fallbackDev  = 'http://localhost:3001';
+
+const base =
+  (import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '')) ||
+  (import.meta.env.DEV ? fallbackDev : fallbackProd);
 
 const api = axios.create({
   baseURL: `${base}/api`,
