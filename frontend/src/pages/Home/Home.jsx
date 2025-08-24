@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useLoadScript } from "@react-google-maps/api";
 import Map from "../../components/Map";
 import "./Home.css";
+import SideNav from "../../components/SideNav/SideNav";
 
 import logo from "../../assets/logo_ixplana.png";
 
@@ -10,6 +11,7 @@ const libraries = ["places"];
 
 export default function Home() {
   const nav = useNavigate();
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
@@ -25,7 +27,8 @@ export default function Home() {
   return (
     <div className="home-container">
       <header className="home-header">
-        <button className="menu-btn">
+        <button className="menu-btn" onClick={() => setMenuOpen(true)}>
+          {" "}
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -40,12 +43,13 @@ export default function Home() {
             ></path>
           </svg>
         </button>
+
         <img src={logo} alt="iXplanabus Logo" className="header-logo" />
         <button onClick={logout} className="logout-btn">
           Sair
         </button>
       </header>
-
+      <SideNav open={menuOpen} onClose={() => setMenuOpen(false)} />
       <Map />
 
       <div className="bottom-bar">
