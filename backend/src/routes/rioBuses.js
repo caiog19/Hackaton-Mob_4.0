@@ -153,6 +153,65 @@ router.get('/track/:ordem', async (req, res) => {
   await tick();
 });
 
+function getDistanceInKm(lat1, lon1, lat2, lon2) {
+  const R = 6371; 
+  const dLat = deg2rad(lat2 - lat1);
+  const dLon = deg2rad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c; 
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI / 180);
+}
+
+router.get('/buses/closest', async (req, res) => {
+  try {
+    const { line, lat, lng } = req.query;
+
+    if (!line || !lat || !lng) {
+      return res.status(400).json({ error: 'Parâmetros "line", "lat" e "lng" são obrigatórios' });
+    }
+
+    const userLat = parseFloat(lat);
+    const userLng = parseFloat(lng);
+    const wantedLine = String(line).trim();
+
+    const { data } = await getDataSingleFlight();
+    let allBuses = normalize(data);
+
+    const busesOnLine = allBuses.filter((bus) => bus.linha === wantedLine);
+
+    if (busesOnLine.length === 0) {
+      return res.status(404).json({ error: `Nenhum veículo encontrado para a linha ${wantedLine}` });
+    }
+
+    let closestBus = null;
+    let minDistance = Infinity;
+
+    for (const bus of busesOnLine) {
+      const distance = getDistanceInKm(userLat, userLng, bus.lat, bus.lng);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestBus = bus;
+      }
+    }
+    
+    closestBus.distanceInKm = minDistance;
+
+    res.json({ updatedAt: new Date(CACHE.ts).toISOString(), vehicle: closestBus });
+
+  } catch (e) {
+    console.error('rio/buses/closest error:', e.message);
+    res.status(502).json({ error: 'Falha ao obter dados para encontrar o ônibus mais próximo' });
+  }
+});
+
 
 
 module.exports = router;
