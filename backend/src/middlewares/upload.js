@@ -1,16 +1,21 @@
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { v2: cloudinary } = require('cloudinary');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
-const uploadRoot = path.join(__dirname, '../../uploads/reports');
-fs.mkdirSync(uploadRoot, { recursive: true });
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-const storage = multer.diskStorage({
-  destination: uploadRoot,
-  filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname || '');
-    cb(null, `${Date.now()}-${Math.round(Math.random()*1e9)}${ext}`);
-  }
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'reports',                
+    resource_type: 'image',
+    format: async () => 'webp',
+    transformation: [{ width: 1600, height: 1600, crop: 'limit' }],
+  },
 });
 
 const fileFilter = (_req, file, cb) => {
@@ -21,5 +26,5 @@ const fileFilter = (_req, file, cb) => {
 module.exports = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+  limits: { fileSize: 5 * 1024 * 1024 }, 
 });
