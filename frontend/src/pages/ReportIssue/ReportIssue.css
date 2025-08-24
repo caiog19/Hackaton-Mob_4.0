@@ -1,0 +1,155 @@
+.report-page {
+  min-height: 100dvh;
+  background: #2485db;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+}
+
+.report-header {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+  margin: 6px 0 8px;
+}
+.report-header h1 {
+  font-size: 26px;
+  margin: 0;
+  font-weight: 800;
+}
+.back-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  background: #ffffff22;
+  color: #fff;
+  cursor: pointer;
+}
+
+.report-card {
+  width: 100%;
+  max-width: 420px;
+  background: linear-gradient(180deg, #1e6fb6, #2380d2);
+  border: 2px solid #ffd100;
+  border-radius: 16px;
+  padding: 14px;
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+}
+
+.report-card h2 {
+  font-size: 16px;
+  margin: 0 0 10px;
+}
+
+.type-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.type-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #1c64a3;
+  border: 1px solid #ffffff33;
+  color: #fff;
+  border-radius: 10px;
+  height: 44px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+.type-btn.active {
+  background: #0f5a99;
+  outline: 2px solid #ffd100;
+}
+.emoji {
+  font-size: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 8px 0;
+}
+.input {
+  height: 42px;
+  border: none;
+  border-radius: 10px;
+  padding: 0 12px;
+  background: #fff;
+  color: #111;
+}
+.loc-block {
+  margin: 8px 0;
+}
+.loc-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.photo-block {
+  margin: 10px 0 6px;
+}
+.photo-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.photo-label {
+  display: block;
+  margin-bottom: 6px;
+}
+.btn-secondary {
+  display: inline-block;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fff;
+  color: #111;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+.btn-link {
+  background: none;
+  border: none;
+  color: #ffe17c;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.photo-preview {
+  width: 100%;
+  border-radius: 12px;
+  margin-top: 8px;
+}
+
+.btn-primary {
+  width: 100%;
+  height: 46px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 18px;
+  background: #ffd100;
+  color: #111;
+  cursor: pointer;
+}
+.error {
+  color: #fca5a5;
+  font-weight: 600;
+  margin-top: 4px;
+}
+.success {
+  color: #c7f9cc;
+  font-weight: 700;
+  margin-top: 4px;
+}

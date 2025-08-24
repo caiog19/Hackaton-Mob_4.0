@@ -1,12 +1,19 @@
-const { Report, User } = require('../models');
+const { Report, User } = require("../models");
 
 async function createReport(req, res) {
   try {
-    const { type, description, location, busLine } = req.body;
-    const user = req.user; 
-
+    let { type, description, location, busLine } = req.body;
+    const user = req.user;
+    const file = req.file;
+    if (typeof location === "string") {
+      try {
+        location = JSON.parse(location);
+      } catch {}
+    }
     if (!type || !location || !location.latitude || !location.longitude) {
-      return res.status(400).json({ error: 'Tipo e localização (lat/lng) são obrigatórios.' });
+      return res
+        .status(400)
+        .json({ error: "Tipo e localização (lat/lng) são obrigatórios." });
     }
 
     const report = await Report.create({
@@ -17,29 +24,30 @@ async function createReport(req, res) {
       busLine: busLine,
       userId: user.id,
       userName: user.name,
+      photoUrl: file ? `/uploads/reports/${file.filename}` : null
     });
 
     res.status(201).json(report);
   } catch (error) {
-    console.error('Erro ao criar relato:', error);
-    res.status(500).json({ error: 'Erro interno do servidor' });
+    console.error("Erro ao criar relato:", error);
+    res.status(500).json({ error: "Erro interno do servidor" });
   }
 }
 
 async function getAllReports(req, res) {
   try {
     const reports = await Report.findAll({
-      order: [['createdAt', 'DESC']], 
-      include: { 
+      order: [["createdAt", "DESC"]],
+      include: {
         model: User,
-        as: 'user',
-        attributes: ['id', 'name'] 
-      }
+        as: "user",
+        attributes: ["id", "name"],
+      },
     });
     res.status(200).json(reports);
   } catch (error) {
-    console.error('Erro ao buscar relatos:', error);
-    res.status(500).json({ error: 'Erro interno do servidor' });
+    console.error("Erro ao buscar relatos:", error);
+    res.status(500).json({ error: "Erro interno do servidor" });
   }
 }
 

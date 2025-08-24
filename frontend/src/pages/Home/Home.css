@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  background-color: #023e58; 
+  background-color: #023e58;
   overflow: hidden;
 }
 
@@ -13,7 +13,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background-color: #2485DB; 
+  background-color: #2485db;
   position: absolute;
   top: 0;
   left: 0;
@@ -22,7 +22,8 @@
   max-height: 70px;
 }
 
-.menu-btn, .logout-btn {
+.menu-btn,
+.logout-btn {
   background: none;
   border: none;
   cursor: pointer;
@@ -37,12 +38,12 @@
 }
 
 .header-logo {
-  width: 80px; 
+  width: 80px;
 }
 
 .search-bar-container {
   position: absolute;
-  top: 80px; 
+  top: 80px;
   left: 16px;
   right: 16px;
   z-index: 10;
@@ -98,7 +99,7 @@
   height: 50px;
   border-radius: 50%;
   border: none;
-  background-color: #2485DB;
+  background-color: #2485db;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -108,7 +109,7 @@
 .speaker-btn svg {
   width: 24px;
   height: 24px;
-  stroke: white; 
+  stroke: white;
 }
 
 .route-info {
@@ -138,7 +139,7 @@
 .alternative-route-btn {
   border: none;
   background: none;
-  color: #2485DB;
+  color: #2485db;
   font-weight: bold;
   cursor: pointer;
   font-size: 14px;
@@ -146,7 +147,7 @@
 
 .suggestions-list {
   position: absolute;
-  top: 100%; 
+  top: 100%;
   left: 0;
   right: 0;
   background-color: white;
@@ -169,17 +170,17 @@
 
 .bus-filter-container {
   position: absolute;
-  top: 136px;          
+  top: 136px;
   left: 16px;
   right: 16px;
-  z-index: 11;          
+  z-index: 11;
   display: flex;
   align-items: center;
   gap: 8px;
   background: #fff;
   border-radius: 8px;
   padding: 8px 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .bus-filter-input {
@@ -196,16 +197,34 @@
   padding: 0 12px;
   border: none;
   border-radius: 8px;
-  background: #2485DB;
+  background: #2485db;
   color: #fff;
   font-weight: 600;
   cursor: pointer;
 }
 
-.btn:hover { opacity: .92; }
+.btn:hover {
+  opacity: 0.92;
+}
 
 .bus-feed-meta {
   white-space: nowrap;
   font-size: 12px;
   color: #374151;
+}
+.fab-report {
+  position: absolute;
+  right: 18px;
+  bottom: 90px;
+  z-index: 11;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  border: none;
+  background: #ffd100;
+  color: #111;
+  font-weight: 900;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.25);
 }
