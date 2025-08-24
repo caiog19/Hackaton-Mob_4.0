@@ -7,9 +7,11 @@ const base =
   (import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '')) ||
   (import.meta.env.DEV ? fallbackDev : fallbackProd);
 
-const api = axios.create({
-  baseURL: `${base}/api`,
-});
+// const api = axios.create({
+//   baseURL: `${base}/api`,
+// });
+export const API_BASE = `${base}/api`;
+const api = axios.create({ baseURL: API_BASE });
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
