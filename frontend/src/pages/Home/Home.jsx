@@ -1,6 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoadScript } from "@react-google-maps/api";
+import { FaBars, FaBullhorn } from 'react-icons/fa';
+import { FiClock } from 'react-icons/fi'; 
 import Map from "../../components/Map";
 import "./Home.css";
 import SideNav from "../../components/SideNav/SideNav";
@@ -28,20 +30,7 @@ export default function Home() {
     <div className="home-container">
       <header className="home-header">
         <button className="menu-btn" onClick={() => setMenuOpen(true)}>
-          {" "}
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M4 6h16M4 12h16M4 18h16"
-              stroke="#FFFFFF"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            ></path>
-          </svg>
+          <FaBars size={24} color="#FFFFFF" />
         </button>
 
         <img src={logo} alt="iXplanabus Logo" className="header-logo" />
@@ -55,44 +44,13 @@ export default function Home() {
       <div className="bottom-bar">
         <div className="ixplanar-info">
           <button className="speaker-btn" onClick={() => nav("/report")}>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12 5v14M8 9v6m8-6v6M4 9v6m16-6v6"
-                stroke="#FFFFFF"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              ></path>
-            </svg>
+            <FaBullhorn size={22} color="#FFFFFF" />
           </button>
           <span>iXplanar</span>
         </div>
         <div className="route-info">
           <span className="time-info">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z"
-                stroke="#333"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              ></path>
-              <path
-                d="M12 6v6l4 2"
-                stroke="#333"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              ></path>
-            </svg>
+            <FiClock size={20} color="#333" style={{ marginRight: '6px' }} />
             25 min
           </span>
           <button className="alternative-route-btn">

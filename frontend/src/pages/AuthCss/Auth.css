@@ -179,6 +179,11 @@ body {
   transform: translateY(-3px);
 }
 
+ .password-toggle-btn {
+  background: none;
+  border: none;     
+ }
+
 @media (min-width:768px){
   .login-page{
     padding:48px 24px;
