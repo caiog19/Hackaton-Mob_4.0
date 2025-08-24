@@ -6,6 +6,7 @@ import Signup from "./pages/Signup/Signup";
 import Home from "./pages/Home/Home";
 import RoutePlanning from "./pages/RoutePlanning/RoutePlanning";
 import ReportIssue from "./pages/ReportIssue/ReportIssue";
+import Community from "./pages/Community/Community";
 
 const libraries = ["places"];
 
@@ -51,6 +52,14 @@ export default function App() {
           element={
             <PrivateRoute>
               <ReportIssue />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/community"
+          element={
+            <PrivateRoute>
+              <Community />
             </PrivateRoute>
           }
         />
