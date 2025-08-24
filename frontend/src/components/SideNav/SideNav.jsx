@@ -1,11 +1,22 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './SideNav.css';
-import logo from '../../assets/logo_ixplana.png';
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  FaHome,
+  FaCalendarAlt,
+  FaUserFriends,
+  FaBus,
+  FaUsers,
+  FaGooglePlay,
+  FaListAlt,
+} from "react-icons/fa";
+import "./SideNav.css";
+import logo from "../../assets/logo_ixplana.png";
 
 const Item = ({ icon, label, onClick }) => (
   <li className="sidenav-item" onClick={onClick}>
-    <span className="sidenav-icon" aria-hidden="true">{icon}</span>
+    <span className="sidenav-icon" aria-hidden="true">
+      {icon}
+    </span>
     <span className="sidenav-label">{label}</span>
   </li>
 );
@@ -14,19 +25,23 @@ export default function SideNav({ open, onClose }) {
   const nav = useNavigate();
 
   useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape' && open) onClose(); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    const onKey = (e) => {
+      if (e.key === "Escape" && open) onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
+
+  const iconSize = 22;
 
   return (
     <div
-      className={`sidenav-overlay ${open ? 'open' : ''}`}
+      className={`sidenav-overlay ${open ? "open" : ""}`}
       onClick={onClose}
       aria-hidden={!open}
     >
       <aside
-        className={`sidenav ${open ? 'open' : ''}`}
+        className={`sidenav ${open ? "open" : ""}`}
         onClick={(e) => e.stopPropagation()}
         aria-label="Menu lateral"
       >
@@ -35,59 +50,46 @@ export default function SideNav({ open, onClose }) {
         </div>
 
         <ul className="sidenav-list">
-
           <Item
             label="Início"
-            onClick={() => { nav('/'); onClose(); }}
-            icon={
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-10.5Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
-              </svg>
-            }
+            onClick={() => {
+              nav("/");
+              onClose();
+            }}
+            icon={<FaHome size={iconSize} />}
           />
-
           <Item
             label="Minhas Viagens"
-            onClick={() => { nav('/'); onClose(); }}
-            icon={
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="2"/>
-                <path d="M16 3v4M8 3v4M3 11h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-            }
+            onClick={() => {
+              nav("/");
+              onClose();
+            }}
+            icon={<FaCalendarAlt size={iconSize} />}
           />
           <Item
             label="Meu relatos"
-            onClick={() => { nav('/'); onClose(); }}
-            icon={
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path d="M16 14a4 4 0 1 1-8 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                <circle cx="12" cy="8" r="3" stroke="currentColor" strokeWidth="2"/>
-                <path d="M3 20c1.5-3 4.5-5 9-5s7.5 2 9 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-            }
+            onClick={() => {
+              nav("/");
+              onClose();
+            }}
+            icon={<FaUserFriends size={iconSize} />}
           />
           <Item
             label="Linhas de ônibus"
-            onClick={() => { nav('/'); onClose(); }}
-            icon={
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <rect x="6" y="3" width="12" height="14" rx="2" stroke="currentColor" strokeWidth="2"/>
-                <path d="M6 13h12M7 20h2M15 20h2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-            }
+            onClick={() => {
+              nav("/");
+              onClose();
+            }}
+            icon={<FaBus size={iconSize} />}
           />
           <Item
             label="Comunidade"
-            onClick={() => { nav('/community'); onClose(); }}
-            icon={
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path d="M21 15a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4" stroke="currentColor" strokeWidth="2"/>
-                <circle cx="12" cy="7" r="3.5" stroke="currentColor" strokeWidth="2"/>
-              </svg>
-            }
+            onClick={() => {
+              nav("/community");
+              onClose();
+            }}
+            icon={<FaUsers size={iconSize} />}
           />
-
         </ul>
 
         <div className="sidenav-divider" />
@@ -95,21 +97,19 @@ export default function SideNav({ open, onClose }) {
         <ul className="sidenav-list">
           <Item
             label="Google Play"
-            onClick={() => { window.open('https://play.google.com/', '_blank'); onClose(); }}
-            icon={
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path d="M3 2l15 10L3 22V2Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
-              </svg>
-            }
+            onClick={() => {
+              window.open("https://play.google.com/", "_blank");
+              onClose();
+            }}
+            icon={<FaGooglePlay size={iconSize} />}
           />
           <Item
             label="Como podemos melhorar?"
-            onClick={() => { nav('/'); onClose(); }}
-            icon={
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path d="M4 6h16M4 12h12M4 18h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-            }
+            onClick={() => {
+              nav("/");
+              onClose();
+            }}
+            icon={<FaListAlt size={iconSize} />}
           />
         </ul>
       </aside>
