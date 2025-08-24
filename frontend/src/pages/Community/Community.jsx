@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api, { SERVER_BASE } from "../../services/api";
+import api from "../../services/api";
 import SideNav from "../../components/SideNav/SideNav";
 import logo from "../../assets/logo_ixplana.png";
 import "./Community.css";
@@ -10,11 +10,7 @@ const timeFilters = [
   { key: "30", label: "30 min", since: () => Date.now() - 30 * 60 * 1000 },
   { key: "60", label: "1 hora", since: () => Date.now() - 60 * 60 * 1000 },
   { key: "120", label: "2 horas", since: () => Date.now() - 120 * 60 * 1000 },
-  {
-    key: "today",
-    label: "hoje",
-    since: () => new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
-  },
+  { key: "today", label: "hoje", since: () => new Date(new Date().setHours(0,0,0,0)).getTime() },
 ];
 
 function timeAgo(dateStr) {
@@ -29,24 +25,49 @@ function timeAgo(dateStr) {
   return days === 1 ? "ontem" : `há ${days} d`;
 }
 
-function hashCode(str) {
-  let h = 0;
-  for (let i = 0; i < str.length; i++) h = (h << 5) - h + str.charCodeAt(i);
-  return Math.abs(h);
-}
-function pastelFromName(name = "U") {
-  const h = hashCode(name) % 360;
-  return `hsl(${h}, 70%, 85%)`;
-}
-function initialFrom(name = "U") {
-  const first = name.trim().split(/\s+/)[0] || "U";
-  return first[0].toUpperCase();
-}
+function hashCode(str) { let h = 0; for (let i = 0; i < str.length; i++) h = (h << 5) - h + str.charCodeAt(i); return Math.abs(h); }
+function pastelFromName(name = "U") { const h = hashCode(name) % 360; return `hsl(${h}, 70%, 85%)`; }
+function initialFrom(name = "U") { const first = name.trim().split(/\s+/)[0] || "U"; return first[0].toUpperCase(); }
+
 const Avatar = ({ name }) => (
   <div className="avatar" style={{ backgroundColor: pastelFromName(name) }}>
     {initialFrom(name)}
   </div>
 );
+
+function ReportThumb({ src, name, alt }) {
+  const [broken, setBroken] = useState(false);
+  if (!src || broken) return <Avatar name={name} />;
+  return (
+    <img
+      src={src}
+      alt={alt}
+      onError={() => setBroken(true)}
+    />
+  );
+}
+
+function ReportCard({ report }) {
+  const name = report.userName || report.user?.name || "Usuário";
+  return (
+    <article className="report-card-comm">
+      <div className="thumb">
+        <ReportThumb src={report.photoUrl || null} name={name} alt={report.type} />
+      </div>
+      <div className="meta">
+        <div className="title-row">
+          <strong className="name">{name}</strong>
+          {report.busLine && <span className="pill">Linha {report.busLine}</span>}
+          <span className="time">{timeAgo(report.createdAt)}</span>
+        </div>
+        <div className="desc">
+          <span className="tag">{report.type}</span>
+          {report.description && <span className="text"> — {report.description}</span>}
+        </div>
+      </div>
+    </article>
+  );
+}
 
 export default function Community() {
   const nav = useNavigate();
@@ -70,23 +91,15 @@ export default function Community() {
         if (active) setLoading(false);
       }
     })();
-    return () => {
-      active = false;
-    };
+    return () => { active = false; };
   }, []);
 
   const filtered = useMemo(() => {
-    const since =
-      timeFilters
-        .find((t) => t.key === filterKey)
-        ?.since()
-        ?.valueOf() || 0;
-    return reports.filter((r) => {
+    const since = timeFilters.find(t => t.key === filterKey)?.since()?.valueOf() || 0;
+    return reports.filter(r => {
       const okTime = new Date(r.createdAt).getTime() >= since;
       const okLine = lineQuery.trim()
-        ? (r.busLine || "")
-            .toLowerCase()
-            .includes(lineQuery.trim().toLowerCase())
+        ? (r.busLine || "").toLowerCase().includes(lineQuery.trim().toLowerCase())
         : true;
       return okTime && okLine;
     });
@@ -102,12 +115,7 @@ export default function Community() {
           aria-label="Abrir menu"
         >
           <svg viewBox="0 0 24 24" fill="none">
-            <path
-              d="M4 6h16M4 12h16M4 18h16"
-              stroke="#fff"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
+            <path d="M4 6h16M4 12h16M4 18h16" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
           </svg>
         </button>
         <img src={logo} alt="iXplanabus" className="comm-logo" />
@@ -127,19 +135,10 @@ export default function Community() {
               value={lineQuery}
               onChange={(e) => setLineQuery(e.target.value)}
             />
-            <button
-              className="comm-search-btn"
-              type="button"
-              aria-label="Pesquisar"
-            >
+            <button className="comm-search-btn" type="button" aria-label="Pesquisar">
               <svg viewBox="0 0 24 24" fill="none">
                 <circle cx="11" cy="11" r="7" stroke="#333" strokeWidth="2" />
-                <path
-                  d="M20 20l-3.5-3.5"
-                  stroke="#333"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
+                <path d="M20 20l-3.5-3.5" stroke="#333" strokeWidth="2" strokeLinecap="round" />
               </svg>
             </button>
           </div>
@@ -165,41 +164,9 @@ export default function Community() {
             <p className="muted">Nenhum relato para os filtros selecionados.</p>
           )}
 
-          {filtered.map((r) => {
-            const name = r.userName || r.user?.name || "Usuário";
-            const img = r.photoUrl
-              ? r.photoUrl.startsWith("http")
-                ? r.photoUrl
-                : `${SERVER_BASE}${r.photoUrl}`
-              : null;
-
-            return (
-              <article key={r.id} className="report-card-comm">
-                <div className="thumb">
-                  {img ? (
-                    <img src={img} alt={r.type} />
-                  ) : (
-                    <Avatar name={name} />
-                  )}
-                </div>
-                <div className="meta">
-                  <div className="title-row">
-                    <strong className="name">{name}</strong>
-                    {r.busLine && (
-                      <span className="pill">Linha {r.busLine}</span>
-                    )}
-                    <span className="time">{timeAgo(r.createdAt)}</span>
-                  </div>
-                  <div className="desc">
-                    <span className="tag">{r.type}</span>
-                    {r.description && (
-                      <span className="text"> — {r.description}</span>
-                    )}
-                  </div>
-                </div>
-              </article>
-            );
-          })}
+          {filtered.map((r) => (
+            <ReportCard key={r.id} report={r} />
+          ))}
         </section>
       </main>
     </div>

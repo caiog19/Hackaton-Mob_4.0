@@ -4,27 +4,29 @@ async function createReport(req, res) {
   try {
     let { type, description, location, busLine } = req.body;
     const user = req.user;
-    const file = req.file;
+    const file = req.file; 
+
     if (typeof location === "string") {
-      try {
-        location = JSON.parse(location);
-      } catch {}
+      try { location = JSON.parse(location); } catch {}
     }
+
     if (!type || !location || !location.latitude || !location.longitude) {
       return res
         .status(400)
         .json({ error: "Tipo e localização (lat/lng) são obrigatórios." });
     }
 
+    const photoUrl = file ? (file.path || file.secure_url || null) : null;
+
     const report = await Report.create({
       type,
       description,
       latitude: location.latitude,
       longitude: location.longitude,
-      busLine: busLine,
+      busLine,
       userId: user.id,
       userName: user.name,
-      photoUrl: file ? `/uploads/reports/${file.filename}` : null
+      photoUrl, 
     });
 
     res.status(201).json(report);
@@ -34,7 +36,7 @@ async function createReport(req, res) {
   }
 }
 
-async function getAllReports(req, res) {
+async function getAllReports(_req, res) {
   try {
     const reports = await Report.findAll({
       order: [["createdAt", "DESC"]],
