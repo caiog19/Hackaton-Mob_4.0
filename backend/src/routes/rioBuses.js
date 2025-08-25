@@ -9,8 +9,20 @@ const agent = new https.Agent({ keepAlive: true });
 const toFloat = (s) => (typeof s === 'string' ? parseFloat(s.replace(',', '.')) : s);
 const toISO = (ms) => new Date(Number(ms)).toISOString();
 
-const TTL_MS   = 10_000;  
-const STALE_MS = 60_000;  
+function normalize(raw) {
+  return raw.map((v) => ({
+    ordem: v.ordem,
+    linha: v.linha,
+    lat: toFloat(v.latitude),
+    lng: toFloat(v.longitude),
+    velocidade: Number(v.velocidade),
+    datahoraMs: Number(v.datahora),
+    datahoraISO: toISO(v.datahora),
+  }));
+}
+
+const TTL_MS   = 10_000;
+const STALE_MS = 60_000;
 
 let CACHE = { data: null, ts: 0 };
 let INFLIGHT = null;
@@ -22,12 +34,13 @@ async function fetchUpstreamWithRetry() {
   const max = 3;
   while (true) {
     try {
-      const { data } = await axios.get(SRC, {
+      const { data: rawData } = await axios.get(SRC, {
         timeout: 12_000,
         httpsAgent: agent,
         headers: { 'User-Agent': 'HackatonMob/1.0', Accept: 'application/json' },
       });
-      CACHE = { data, ts: Date.now() };
+      const normalizedData = normalize(rawData);
+      CACHE = { data: normalizedData, ts: Date.now() };
       return CACHE.data;
     } catch (e) {
       attempt++;
@@ -48,41 +61,33 @@ async function getDataSingleFlight() {
   if (INFLIGHT) return { data: await INFLIGHT, stale: false };
 
   INFLIGHT = (async () => {
-    try { return await fetchUpstreamWithRetry(); }
-    finally { INFLIGHT = null; }
+    try {
+      return await fetchUpstreamWithRetry();
+    } finally {
+      INFLIGHT = null;
+    }
   })();
   return { data: await INFLIGHT, stale: false };
 }
 
-function normalize(raw) {
-  return raw.map((v) => ({
-    ordem: v.ordem,
-    linha: v.linha,
-    lat: toFloat(v.latitude),
-    lng: toFloat(v.longitude),
-    velocidade: Number(v.velocidade),
-    datahoraMs: Number(v.datahora),
-    datahoraISO: toISO(v.datahora),
-  }));
-}
 
 router.get('/buses', async (req, res) => {
   try {
     const { line, bbox } = req.query;
-    let raw;
+    let data; 
     try {
       const out = await getDataSingleFlight();
-      raw = out.data;
+      data = out.data;
     } catch (e) {
       const age = Date.now() - CACHE.ts;
       if (!CACHE.data || age > STALE_MS) {
         console.error('rio/buses error:', e.message);
         return res.status(502).json({ error: 'Falha ao obter dados da API da Prefeitura' });
       }
-      raw = CACHE.data;
+      data = CACHE.data;
     }
 
-    let arr = normalize(raw);
+    let arr = data;
 
     if (line) {
       const wanted = String(line).trim();
@@ -109,8 +114,7 @@ router.get('/bus', async (req, res) => {
     if (!ordem) return res.status(400).json({ error: 'Parâmetro "ordem" obrigatório' });
 
     const { data } = await getDataSingleFlight();
-    const arr = normalize(data);
-    const bus = arr.find((v) => v.ordem === ordem);
+    const bus = data.find((v) => v.ordem === ordem);
     if (!bus) return res.status(404).json({ error: 'Veículo não encontrado' });
 
     res.json({ updatedAt: new Date(CACHE.ts).toISOString(), vehicle: bus });
@@ -137,10 +141,10 @@ router.get('/track/:ordem', async (req, res) => {
   req.on('close', () => { closed = true; clearInterval(tickId); clearInterval(pingId); });
 
   async function tick() {
+    if (closed) return; 
     try {
       const { data } = await getDataSingleFlight();
-      const arr = normalize(data);
-      const bus = arr.find((v) => v.ordem === ordem) || null;
+      const bus = data.find((v) => v.ordem === ordem) || null;
       write({ ts: new Date(CACHE.ts).toISOString(), ordem, found: !!bus, vehicle: bus });
     } catch (e) {
       write({ ts: new Date().toISOString(), ordem, found: false, error: 'upstream_error' });
@@ -152,6 +156,7 @@ router.get('/track/:ordem', async (req, res) => {
   const pingId = setInterval(ping, 20000);
   await tick();
 });
+
 
 function getDistanceInKm(lat1, lon1, lat2, lon2) {
   const R = 6371; 
@@ -183,9 +188,7 @@ router.get('/buses/closest', async (req, res) => {
     const wantedLine = String(line).trim();
 
     const { data } = await getDataSingleFlight();
-    let allBuses = normalize(data);
-
-    const busesOnLine = allBuses.filter((bus) => bus.linha === wantedLine);
+    const busesOnLine = data.filter((bus) => bus.linha === wantedLine);
 
     if (busesOnLine.length === 0) {
       return res.status(404).json({ error: `Nenhum veículo encontrado para a linha ${wantedLine}` });
@@ -198,12 +201,10 @@ router.get('/buses/closest', async (req, res) => {
       const distance = getDistanceInKm(userLat, userLng, bus.lat, bus.lng);
       if (distance < minDistance) {
         minDistance = distance;
-        closestBus = bus;
+        closestBus = { ...bus, distanceInKm: minDistance }; 
       }
     }
     
-    closestBus.distanceInKm = minDistance;
-
     res.json({ updatedAt: new Date(CACHE.ts).toISOString(), vehicle: closestBus });
 
   } catch (e) {
@@ -211,7 +212,6 @@ router.get('/buses/closest', async (req, res) => {
     res.status(502).json({ error: 'Falha ao obter dados para encontrar o ônibus mais próximo' });
   }
 });
-
 
 
 module.exports = router;
