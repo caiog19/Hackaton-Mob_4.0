@@ -11,6 +11,7 @@ const timeFilters = [
   { key: "60", label: "1 hora", since: () => Date.now() - 60 * 60 * 1000 },
   { key: "120", label: "2 horas", since: () => Date.now() - 120 * 60 * 1000 },
   { key: "today", label: "hoje", since: () => new Date(new Date().setHours(0,0,0,0)).getTime() },
+  { key: "all", label: "sempre", since: () => 0 },
 ];
 
 function timeAgo(dateStr) {
@@ -38,13 +39,7 @@ const Avatar = ({ name }) => (
 function ReportThumb({ src, name, alt }) {
   const [broken, setBroken] = useState(false);
   if (!src || broken) return <Avatar name={name} />;
-  return (
-    <img
-      src={src}
-      alt={alt}
-      onError={() => setBroken(true)}
-    />
-  );
+  return <img src={src} alt={alt} onError={() => setBroken(true)} />;
 }
 
 function ReportCard({ report }) {
@@ -76,7 +71,7 @@ export default function Community() {
   const [err, setErr] = useState("");
   const [reports, setReports] = useState([]);
   const [lineQuery, setLineQuery] = useState("");
-  const [filterKey, setFilterKey] = useState("today");
+  const [filterKey, setFilterKey] = useState("today"); 
 
   useEffect(() => {
     let active = true;
@@ -95,9 +90,10 @@ export default function Community() {
   }, []);
 
   const filtered = useMemo(() => {
-    const since = timeFilters.find(t => t.key === filterKey)?.since()?.valueOf() || 0;
+    const since =
+      timeFilters.find(t => t.key === filterKey)?.since()?.valueOf() ?? 0;
     return reports.filter(r => {
-      const okTime = new Date(r.createdAt).getTime() >= since;
+      const okTime = new Date(r.createdAt).getTime() >= since; 
       const okLine = lineQuery.trim()
         ? (r.busLine || "").toLowerCase().includes(lineQuery.trim().toLowerCase())
         : true;
